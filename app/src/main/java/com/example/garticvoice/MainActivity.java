@@ -2,6 +2,8 @@ package com.example.garticvoice;
 
 import android.os.Bundle;
 
+import com.example.garticvoice.dao.DAOGame;
+import com.example.garticvoice.model.Game;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -33,7 +35,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
