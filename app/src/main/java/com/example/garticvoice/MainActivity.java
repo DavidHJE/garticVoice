@@ -2,18 +2,15 @@ package com.example.garticvoice;
 
 import android.os.Bundle;
 
-import com.example.garticvoice.dao.DAOGame;
-import com.example.garticvoice.model.Game;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.material.snackbar.Snackbar;
+import com.example.garticvoice.dao.DAOPlayer;
+import com.example.garticvoice.model.Player;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -21,20 +18,16 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.example.garticvoice.databinding.ActivityMainBinding;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.main_window);
+
     }
 
     @Override
@@ -71,5 +64,17 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         return NavigationUI.navigateUp(navController, appBarConfiguration)
                 || super.onSupportNavigateUp();
+    }
+
+    public void clickOnBtnCreateGame(View v){
+        TextView pseudoTextField = this.findViewById(R.id.PseudoTextField);
+        Player player = new Player(pseudoTextField.getText().toString());
+        DAOPlayer daoPlayer = new DAOPlayer();
+        try {
+            Player dbPlayer = daoPlayer.create(player);
+            Toast.makeText(this,"Ouverture QR", Toast.LENGTH_SHORT).show();
+        }catch(Exception e){
+
+        }
     }
 }
