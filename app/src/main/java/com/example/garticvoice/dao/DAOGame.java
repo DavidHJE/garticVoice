@@ -1,10 +1,7 @@
 package com.example.garticvoice.dao;
 
-import android.util.Log;
-
 import com.example.garticvoice.model.Game;
-import com.example.garticvoice.model.Player;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -19,23 +16,18 @@ public class DAOGame {
 
     }
 
-    public Game create(Game game){
+    public Task<DocumentReference> create(Game game) throws Exception {
         Map<String, Object> newGame = new HashMap<>();
         newGame.put("maxCapacity", game.getMaxCapacity());
         newGame.put("listPlayer", game.getListPlayer());
         newGame.put("state", game.getState());
 
-        if(game !=  null){
-            db.collection("games")
-                    .add(newGame)
-                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                        @Override
-                        public void onSuccess(DocumentReference documentReference) {
-                            game.setUuid(documentReference.getId());
-                        }
-                    });
+        if (game == null) {
+            throw new Exception("Game empty");
         }
-        return game;
+
+        return db.collection("games")
+                .add(newGame);
     }
 
 }

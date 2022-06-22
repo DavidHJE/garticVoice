@@ -21,7 +21,11 @@
         android:id="@+id/qrCodeFragment"
         android:name="com.example.garticvoice.QrCodeFragment"
         android:label="fragment_qr_code"
-        tools:layout="@layout/fragment_qr_code" />
+        tools:layout="@layout/fragment_qr_code" >
+        <argument
+            android:name="gameId"
+            app:argType="string" />
+    </fragment>
     <fragment
         android:id="@+id/qrJoinFragment"
         android:name="com.example.garticvoice.QrJoinFragment"
