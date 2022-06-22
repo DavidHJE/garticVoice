@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.example.garticvoice.databinding.FragmentFirstBinding;
 import com.example.garticvoice.databinding.FragmentQrCodeBinding;
 import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 
 /**
@@ -64,43 +65,38 @@ public class QrCodeFragment extends Fragment {
         gameId = getArguments().getString(ARG_GAME_ID);
     }
 
-    public void qrcode (FragmentQrCodeBinding binding) {
-        qrcodeImg = binding.QRCodeImg;
-
-        if(TextUtils.isEmpty(gameId)) {
-            Log.d("BARCODE", "Gameid Empty");
-            Toast.makeText(getContext(), "Game non creé", Toast.LENGTH_SHORT).show();
-        } else {
-            try {
-                BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
-                Bitmap bitmap = barcodeEncoder.encodeBitmap(gameId, BarcodeFormat.QR_CODE, 400, 400);
-                // qrcodeImg.setImageBitmap(bitmap);
-                Resources res = getResources();
-                qrcodeImg.setImageDrawable(res.getDrawable(R.drawable.ic_launcher_background));
-                qrcodeImg.invalidate();
-                Toast.makeText(getContext(), "Creer QRCode", Toast.LENGTH_SHORT).show();
-            } catch(Exception e) {
-                Log.d("BARCODE - ERROR", e.toString());
-            }
-        }
-
-    }
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         binding = FragmentQrCodeBinding.inflate(inflater, container, false);
 
-
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_qr_code, container, false);
+    }
+
+    private Bitmap createQRCode(String gameId) throws WriterException {
+        BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
+        return barcodeEncoder.encodeBitmap(gameId, BarcodeFormat.QR_CODE, 400, 400);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        qrcode(binding);
+        qrcodeImg = view.findViewById(R.id.QRCodeImg);
+
+        if(TextUtils.isEmpty(gameId)) {
+            Log.d("BARCODE", "Gameid Empty");
+            Toast.makeText(getContext(), "Game non creé", Toast.LENGTH_SHORT).show();
+        } else {
+            try {
+                Bitmap qrCode = createQRCode(gameId);
+                qrcodeImg.setImageBitmap(qrCode);
+                Toast.makeText(getContext(), "Creer QRCode", Toast.LENGTH_SHORT).show();
+            } catch(Exception e) {
+                Log.d("BARCODE - ERROR", e.toString());
+            }
+        }
     }
 }
