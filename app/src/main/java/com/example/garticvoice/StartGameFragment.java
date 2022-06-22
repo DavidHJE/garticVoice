@@ -38,6 +38,7 @@ public class StartGameFragment extends Fragment {
     private static final String ARG_PARAM2 = "param2";
     private FragmentStartGameBinding binding;
     private List<Player> listPlayer;
+    private boolean createGame;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -90,6 +91,7 @@ public class StartGameFragment extends Fragment {
         binding.btnCreateGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                createGame = true;
                 Player player = new Player(binding.pseudoTextField.getText().toString());
                 DAOPlayer daoPlayer = new DAOPlayer();
                 Player dbPlayer = new Player();
@@ -106,6 +108,7 @@ public class StartGameFragment extends Fragment {
         binding.BtnJoinGame.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                createGame = false;
                 Player player = new Player(binding.pseudoTextField.getText().toString());
                 DAOPlayer daoPlayer = new DAOPlayer();
                 Player dbPlayer = new Player();
@@ -121,19 +124,25 @@ public class StartGameFragment extends Fragment {
     }
 
     public void addPlayer(Player p){
-        DAOGame daoGame = new DAOGame();
-        Game dbGame = new Game();
+        if(createGame){
+            DAOGame daoGame = new DAOGame();
+            Game dbGame = new Game();
 
-        listPlayer = new ArrayList();
-        listPlayer.add(p);
+            listPlayer = new ArrayList();
+            listPlayer.add(p);
 
-        try {
-            Game game = new Game(10,listPlayer, State.IN_PROGRESS);
-            dbGame = daoGame.create(game);
+            try {
+                Game game = new Game(10,listPlayer, State.IN_PROGRESS);
+                dbGame = daoGame.create(game);
+                NavHostFragment.findNavController(StartGameFragment.this)
+                        .navigate(R.id.action_startGameFragment_to_qrCodeFragment);
+            }catch(Exception e){
+
+            }
+        }else{
             NavHostFragment.findNavController(StartGameFragment.this)
-                    .navigate(R.id.action_startGameFragment_to_qrCodeFragment);
-        }catch(Exception e){
-
+                    .navigate(R.id.action_startGameFragment_to_qrJoinFragment);
         }
+
     }
 }
