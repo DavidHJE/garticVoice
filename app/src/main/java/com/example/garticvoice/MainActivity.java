@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
@@ -64,17 +65,5 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         return NavigationUI.navigateUp(navController, appBarConfiguration)
                 || super.onSupportNavigateUp();
-    }
-
-    public void clickOnBtnCreateGame(View v){
-        TextView pseudoTextField = this.findViewById(R.id.PseudoTextField);
-        Player player = new Player(pseudoTextField.getText().toString());
-        DAOPlayer daoPlayer = new DAOPlayer();
-        try {
-            Player dbPlayer = daoPlayer.create(player);
-            Toast.makeText(this,"Ouverture QR", Toast.LENGTH_SHORT).show();
-        }catch(Exception e){
-
-        }
     }
 }

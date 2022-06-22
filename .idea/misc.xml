@@ -5,7 +5,11 @@
       <map>
         <entry key="..\:/Users/dylan/AndroidStudioProjects/garticVoice/app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="..\:/Users/dylan/AndroidStudioProjects/garticVoice/app/src/main/res/layout/content_main.xml" value="0.1" />
-        <entry key="..\:/Users/dylan/AndroidStudioProjects/garticVoice/app/src/main/res/layout/main_window.xml" value="0.2" />
+        <entry key="..\:/Users/dylan/AndroidStudioProjects/garticVoice/app/src/main/res/layout/fragment_qr_code.xml" value="0.25" />
+        <entry key="..\:/Users/dylan/AndroidStudioProjects/garticVoice/app/src/main/res/layout/fragment_qr_join.xml" value="0.6028645833333334" />
+        <entry key="..\:/Users/dylan/AndroidStudioProjects/garticVoice/app/src/main/res/layout/fragment_second.xml" value="0.10914855072463768" />
+        <entry key="..\:/Users/dylan/AndroidStudioProjects/garticVoice/app/src/main/res/layout/fragment_start_game.xml" value="0.264" />
+        <entry key="..\:/Users/dylan/AndroidStudioProjects/garticVoice/app/src/main/res/layout/main_window.xml" value="0.136" />
       </map>
     </option>
   </component>

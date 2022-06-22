@@ -4,6 +4,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.example.garticvoice.StartGameFragment;
 import com.example.garticvoice.model.Player;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -25,10 +26,9 @@ public class DAOPlayer {
 
     }
 
-    public Player create(Player player){
+    public Player create(Player player, StartGameFragment fragment){
         Map<String, Object> newPlayer = new HashMap<>();
         newPlayer.put("pseudo", player.getPseudo());
-
         if(player !=  null){
             db.collection("players")
                     .add(newPlayer)
@@ -36,6 +36,7 @@ public class DAOPlayer {
                         @Override
                         public void onSuccess(DocumentReference documentReference) {
                             player.setUuid(documentReference.getId());
+                            fragment.addPlayer(player);
                         }
                     });
         }
