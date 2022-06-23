@@ -1,17 +1,15 @@
 package com.example.garticvoice;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.navigation.fragment.NavHostFragment;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
+
 import com.example.garticvoice.dao.DAOGame;
-import com.example.garticvoice.model.Game;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -19,7 +17,6 @@ import com.example.garticvoice.model.Game;
 public class QrJoinFragment extends Fragment {
 
     public static String ARG_GAME_ID;
-    private String gameId;
 
     public QrJoinFragment() {
         // Required empty public constructor
@@ -34,7 +31,7 @@ public class QrJoinFragment extends Fragment {
             return;
         }
 
-        gameId = getArguments().getString(ARG_GAME_ID);
+        String gameId = getArguments().getString(ARG_GAME_ID);
 
         DAOGame daoGame = new DAOGame();
         daoGame.waitGameStart(gameId, this);

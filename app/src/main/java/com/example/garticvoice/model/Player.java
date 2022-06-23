@@ -1,5 +1,7 @@
 package com.example.garticvoice.model;
 
+import androidx.annotation.NonNull;
+
 public class Player {
     private String uuid;
     private String pseudo;
@@ -29,6 +31,7 @@ public class Player {
         this.pseudo = pseudo;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "Player{" +

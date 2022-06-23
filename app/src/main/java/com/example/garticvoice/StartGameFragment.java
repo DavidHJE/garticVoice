@@ -40,19 +40,15 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class StartGameFragment extends Fragment {
-    private FragmentStartGameBinding binding;
-    private List<Player> listPlayer;
-    private boolean createGame;
     Player dbPlayer;
-
     private final ActivityResultLauncher<ScanOptions> barcodeLauncher = registerForActivityResult(new ScanContract(),
             result -> {
-                if(result.getContents() == null) {
+                if (result.getContents() == null) {
                     Intent originalIntent = result.getOriginalIntent();
                     if (originalIntent == null) {
                         Log.d("BARCODE", "Cancelled scan");
                         Toast.makeText(getContext(), "Cancelled", Toast.LENGTH_LONG).show();
-                    } else if(originalIntent.hasExtra(Intents.Scan.MISSING_CAMERA_PERMISSION)) {
+                    } else if (originalIntent.hasExtra(Intents.Scan.MISSING_CAMERA_PERMISSION)) {
                         Log.d("BARCODE", "Cancelled scan due to missing camera permission");
                         Toast.makeText(getContext(), "Cancelled due to missing camera permission", Toast.LENGTH_LONG).show();
                     }
@@ -65,7 +61,7 @@ public class StartGameFragment extends Fragment {
                     daoGame.find(gameUuid).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                         @Override
                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                            if (task.isSuccessful()){
+                            if (task.isSuccessful()) {
                                 Log.w("BARCODE", "successful");
 
                                 if (dbPlayer == null) {
@@ -77,7 +73,7 @@ public class StartGameFragment extends Fragment {
 
                                 DocumentSnapshot document = task.getResult();
                                 List<HashMap> playersFirebase = (List<HashMap>) document.get("listPlayer");
-                                for (HashMap p: playersFirebase) {
+                                for (HashMap p : playersFirebase) {
                                     Player player = new Player();
                                     player.setUuid((String) p.get("uuid"));
                                     player.setPseudo((String) p.get("pseudo"));
@@ -123,6 +119,8 @@ public class StartGameFragment extends Fragment {
 
                 }
             });
+    private FragmentStartGameBinding binding;
+    private boolean createGame;
 
     public StartGameFragment() {
         // Required empty public constructor
@@ -148,7 +146,7 @@ public class StartGameFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         //return inflater.inflate(R.layout.fragment_start_game, container, false);
@@ -170,7 +168,7 @@ public class StartGameFragment extends Fragment {
                 try {
                     dbPlayer = daoPlayer.create(player, StartGameFragment.this);
                 } catch (Exception e) {
-
+                    Log.e("BARCODE", "Imposible de creer le joueur", e);
                 }
 
             }
@@ -186,7 +184,7 @@ public class StartGameFragment extends Fragment {
                 try {
                     dbPlayer = daoPlayer.create(player, StartGameFragment.this);
                 } catch (Exception e) {
-
+                    Log.e("BARCODE", "Imposible de creer le joueur", e);
                 }
 
             }
@@ -199,7 +197,7 @@ public class StartGameFragment extends Fragment {
             DAOGame daoGame = new DAOGame();
             Task<DocumentReference> gameResult;
 
-            listPlayer = new ArrayList();
+            List<Player> listPlayer = new ArrayList();
             listPlayer.add(p);
 
             try {

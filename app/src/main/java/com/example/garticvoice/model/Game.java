@@ -1,10 +1,10 @@
 package com.example.garticvoice.model;
 
+import androidx.annotation.NonNull;
+
 import com.example.garticvoice.enums.State;
 
-import java.util.ArrayList;
 import java.util.List;
-
 
 
 public class Game {
@@ -13,7 +13,7 @@ public class Game {
     private List<Player> listPlayer;
     private State state;
 
-    public Game(){
+    public Game() {
 
     }
 
@@ -64,6 +64,7 @@ public class Game {
         this.state = state;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "Game{" +

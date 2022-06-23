@@ -1,20 +1,16 @@
 package com.example.garticvoice;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
-import com.example.garticvoice.dao.DAOPlayer;
 import com.example.garticvoice.databinding.FragmentRoundBinding;
-import com.example.garticvoice.databinding.FragmentStartGameBinding;
-import com.example.garticvoice.model.Player;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -28,10 +24,6 @@ public class RoundFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private FragmentRoundBinding binding;
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     public RoundFragment() {
         // Required empty public constructor
@@ -59,19 +51,19 @@ public class RoundFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            // TODO: Rename and change types of parameters
+            String mParam1 = getArguments().getString(ARG_PARAM1);
+            String mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentRoundBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
-
 
 
     @Override

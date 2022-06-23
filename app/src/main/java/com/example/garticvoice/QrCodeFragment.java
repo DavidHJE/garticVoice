@@ -1,14 +1,7 @@
 package com.example.garticvoice;
 
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.navigation.fragment.NavHostFragment;
-
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,12 +10,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
+
 import com.example.garticvoice.dao.DAOGame;
-import com.example.garticvoice.databinding.FragmentFirstBinding;
 import com.example.garticvoice.databinding.FragmentQrCodeBinding;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
@@ -35,10 +29,8 @@ import com.journeyapps.barcodescanner.BarcodeEncoder;
  */
 public class QrCodeFragment extends Fragment {
     public static final String ARG_GAME_ID = "game_id";
-    private FragmentQrCodeBinding binding;
 
     private String gameId;
-    private ImageView qrcodeImg;
 
     public QrCodeFragment() {
         // Required empty public constructor
@@ -75,7 +67,7 @@ public class QrCodeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        binding = FragmentQrCodeBinding.inflate(inflater, container, false);
+        com.example.garticvoice.databinding.FragmentQrCodeBinding binding = FragmentQrCodeBinding.inflate(inflater, container, false);
 
 
         // Inflate the layout for this fragment
@@ -95,19 +87,19 @@ public class QrCodeFragment extends Fragment {
             DAOGame daoGame = new DAOGame();
             Task<Void> taskStart = daoGame.startRoundGame(gameId);
             taskStart.addOnSuccessListener(aVoid -> {
-                Log.d("BARCODE", "DocumentSnapshot successfully written!");
-                Toast.makeText(getContext(), "Commencer la game", Toast.LENGTH_SHORT).show();
+                        Log.d("BARCODE", "DocumentSnapshot successfully written!");
+                        Toast.makeText(getContext(), "Commencer la game", Toast.LENGTH_SHORT).show();
 
-                NavHostFragment.findNavController(QrCodeFragment.this)
-                        .navigate(R.id.action_qrCodeFragment_to_roundFragment);
-            })
+                        NavHostFragment.findNavController(QrCodeFragment.this)
+                                .navigate(R.id.action_qrCodeFragment_to_roundFragment);
+                    })
                     .addOnFailureListener(e -> Log.w("BARCODE", "Error writing document", e));
 
 
         });
-        qrcodeImg = view.findViewById(R.id.QRCodeImg);
+        ImageView qrcodeImg = view.findViewById(R.id.QRCodeImg);
 
-        if(TextUtils.isEmpty(gameId)) {
+        if (TextUtils.isEmpty(gameId)) {
             Log.d("BARCODE", "Gameid Empty");
             Toast.makeText(getContext(), "Game non creé", Toast.LENGTH_SHORT).show();
         } else {
@@ -115,7 +107,7 @@ public class QrCodeFragment extends Fragment {
                 Bitmap qrCode = createQRCode(gameId);
                 qrcodeImg.setImageBitmap(qrCode);
                 Toast.makeText(getContext(), "Creer QRCode", Toast.LENGTH_SHORT).show();
-            } catch(Exception e) {
+            } catch (Exception e) {
                 Log.d("BARCODE - ERROR", e.toString());
             }
         }

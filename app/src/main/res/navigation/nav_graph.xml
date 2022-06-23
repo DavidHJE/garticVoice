@@ -21,7 +21,7 @@
         android:id="@+id/qrCodeFragment"
         android:name="com.example.garticvoice.QrCodeFragment"
         android:label="fragment_qr_code"
-        tools:layout="@layout/fragment_qr_code" >
+        tools:layout="@layout/fragment_qr_code">
         <argument
             android:name="gameId"
             app:argType="string" />
@@ -33,7 +33,7 @@
         android:id="@+id/qrJoinFragment"
         android:name="com.example.garticvoice.QrJoinFragment"
         android:label="fragment_qr_join"
-        tools:layout="@layout/fragment_qr_join" >
+        tools:layout="@layout/fragment_qr_join">
         <action
             android:id="@+id/action_qrJoinFragment_to_roundFragment"
             app:destination="@id/roundFragment" />
@@ -42,7 +42,7 @@
         android:id="@+id/roundFragment"
         android:name="com.example.garticvoice.RoundFragment"
         android:label="fragment_round"
-        tools:layout="@layout/fragment_round" >
+        tools:layout="@layout/fragment_round">
         <action
             android:id="@+id/action_roundFragment_to_recordAudioFragment"
             app:destination="@id/recordAudioFragment" />
