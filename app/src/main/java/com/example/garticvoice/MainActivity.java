@@ -56,20 +56,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.main_window);
 
         /*
-        scanBtn = findViewById(R.id.scanQRCode);
-        resultTxt = findViewById(R.id.result);
-         */
-
-        try {
-            BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
-            Bitmap bitmap = barcodeEncoder.encodeBitmap("content", BarcodeFormat.QR_CODE, 400, 400);
-            // ImageView imageViewQrCode = (ImageView) findViewById(R.id.QRCode);
-            // imageViewQrCode.setImageBitmap(bitmap);
-        } catch(Exception e) {
-            Log.d("BARCODE - ERROR", e.toString());
-        }
-
-        /*
         scanBtn.setOnClickListener(view -> {
             ScanOptions options = new ScanOptions();
             options.setOrientationLocked(true);

@@ -1,8 +1,11 @@
 package com.example.garticvoice.dao;
 
+import androidx.annotation.NonNull;
+
 import com.example.garticvoice.model.Game;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -22,12 +25,20 @@ public class DAOGame {
         newGame.put("listPlayer", game.getListPlayer());
         newGame.put("state", game.getState());
 
-        if (game == null) {
-            throw new Exception("Game empty");
-        }
-
         return db.collection("games")
                 .add(newGame);
     }
 
+    public Task<DocumentSnapshot> find(String uuid) {
+        return db.collection("games").document(uuid).get();
+    }
+
+    public Task<Void> update(@NonNull Game game) {
+        Map<String, Object> newGame = new HashMap<>();
+        newGame.put("maxCapacity", game.getMaxCapacity());
+        newGame.put("listPlayer", game.getListPlayer());
+        newGame.put("state", game.getState());
+
+        return db.collection("games").document(game.getUuid()).update(newGame);
+    }
 }

@@ -1,11 +1,14 @@
 package com.example.garticvoice;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -17,11 +20,18 @@ import com.example.garticvoice.databinding.FragmentStartGameBinding;
 import com.example.garticvoice.enums.State;
 import com.example.garticvoice.model.Game;
 import com.example.garticvoice.model.Player;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.zxing.client.android.Intents;
+import com.journeyapps.barcodescanner.ScanContract;
+import com.journeyapps.barcodescanner.ScanOptions;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -33,6 +43,81 @@ public class StartGameFragment extends Fragment {
     private FragmentStartGameBinding binding;
     private List<Player> listPlayer;
     private boolean createGame;
+    Player dbPlayer;
+
+    private final ActivityResultLauncher<ScanOptions> barcodeLauncher = registerForActivityResult(new ScanContract(),
+            result -> {
+                if(result.getContents() == null) {
+                    Intent originalIntent = result.getOriginalIntent();
+                    if (originalIntent == null) {
+                        Log.d("BARCODE", "Cancelled scan");
+                        Toast.makeText(getContext(), "Cancelled", Toast.LENGTH_LONG).show();
+                    } else if(originalIntent.hasExtra(Intents.Scan.MISSING_CAMERA_PERMISSION)) {
+                        Log.d("BARCODE", "Cancelled scan due to missing camera permission");
+                        Toast.makeText(getContext(), "Cancelled due to missing camera permission", Toast.LENGTH_LONG).show();
+                    }
+                } else {
+                    Log.d("BARCODE", "Scanned");
+                    Toast.makeText(getContext(), "Scanned", Toast.LENGTH_LONG).show();
+                    String gameUuid = result.getContents();
+
+                    DAOGame daoGame = new DAOGame();
+                    daoGame.find(gameUuid).addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if (task.isSuccessful()){
+                                Log.w("BARCODE", "successful");
+
+                                if (dbPlayer == null) {
+                                    Log.d("BARCODE", "Player null, not normal");
+                                    return;
+                                }
+
+                                List<Player> players = new ArrayList();
+
+                                DocumentSnapshot document = task.getResult();
+                                List<HashMap> playersFirebase = (List<HashMap>) document.get("listPlayer");
+                                for (HashMap p: playersFirebase) {
+                                    Player player = new Player();
+                                    player.setUuid((String) p.get("uuid"));
+                                    player.setPseudo((String) p.get("pseudo"));
+                                    players.add(player);
+                                }
+                                players.add(dbPlayer);
+                                Log.w("BARCODE", "successful");
+                                Log.d("BARCODE", players.toString());
+
+                                Game game = new Game();
+                                game.setUuid(task.getResult().getId());
+                                game.setListPlayer(players);
+                                game.setState(State.valueOf(task.getResult().getString("state")));
+                                game.setMaxCapacity(Integer.valueOf(task.getResult().get("maxCapacity").toString()));
+
+                                daoGame.update(game).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                Log.d("BARCODE", "DocumentSnapshot successfully written!");
+                                                Toast.makeText(getContext(), "Entrer dans la game", Toast.LENGTH_LONG).show();
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Log.w("BARCODE", "Error writing document", e);
+                                            }
+                                        });
+
+                            } else {
+                                Log.d("BARCODE", "not successful");
+                                Toast.makeText(getContext(), "Not game found", Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    });
+
+                    NavHostFragment.findNavController(StartGameFragment.this)
+                            .navigate(R.id.action_startGameFragment_to_qrJoinFragment);
+                }
+            });
 
     public StartGameFragment() {
         // Required empty public constructor
@@ -76,10 +161,9 @@ public class StartGameFragment extends Fragment {
                 createGame = true;
                 Player player = new Player(binding.pseudoTextField.getText().toString());
                 DAOPlayer daoPlayer = new DAOPlayer();
-                Player dbPlayer = new Player();
+                dbPlayer = new Player();
                 try {
                     dbPlayer = daoPlayer.create(player, StartGameFragment.this);
-
                 } catch (Exception e) {
 
                 }
@@ -93,10 +177,9 @@ public class StartGameFragment extends Fragment {
                 createGame = false;
                 Player player = new Player(binding.pseudoTextField.getText().toString());
                 DAOPlayer daoPlayer = new DAOPlayer();
-                Player dbPlayer = new Player();
+                dbPlayer = new Player();
                 try {
                     dbPlayer = daoPlayer.create(player, StartGameFragment.this);
-
                 } catch (Exception e) {
 
                 }
@@ -133,8 +216,16 @@ public class StartGameFragment extends Fragment {
             }
         } else {
             Log.d("BARCODE", "Join game");
-            NavHostFragment.findNavController(StartGameFragment.this)
-                    .navigate(R.id.action_startGameFragment_to_qrJoinFragment);
+
+            ScanOptions options = new ScanOptions();
+            options.setOrientationLocked(true);
+            options.setBeepEnabled(true);
+            options.setBarcodeImageEnabled(false);
+            options.setDesiredBarcodeFormats(ScanOptions.QR_CODE);
+            options.setPrompt("Scan QR Code");
+            barcodeLauncher.launch(options);
+
+
         }
 
     }

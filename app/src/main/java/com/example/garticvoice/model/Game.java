@@ -2,6 +2,7 @@ package com.example.garticvoice.model;
 
 import com.example.garticvoice.enums.State;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -20,6 +21,15 @@ public class Game {
         this.maxCapacity = maxCapacity;
         this.listPlayer = listPlayer;
         this.state = state;
+    }
+
+    public void addPlayer(Player p) {
+        this.listPlayer.add(p);
+    }
+
+    // TODO : remove selon l'uuid
+    public void removePlayer(Player p) {
+        this.listPlayer.remove(p);
     }
 
     public String getUuid() {
@@ -59,7 +69,7 @@ public class Game {
         return "Game{" +
                 "uuid='" + uuid + '\'' +
                 ", maxCapacity=" + maxCapacity +
-                ", listPlayer=" + listPlayer +
+                ", listPlayer=" + listPlayer.toString() +
                 ", state=" + state +
                 '}';
     }
