@@ -4,7 +4,6 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 
 import com.example.garticvoice.QrJoinFragment;
 import com.example.garticvoice.enums.State;
@@ -27,7 +26,7 @@ public class DAOGame {
 
     }
 
-    public Task<DocumentReference> create(Game game) throws Exception {
+    public Task<DocumentReference> create(Game game) {
         Map<String, Object> newGame = new HashMap<>();
         newGame.put("maxCapacity", game.getMaxCapacity());
         newGame.put("listPlayer", game.getListPlayer());
@@ -51,22 +50,22 @@ public class DAOGame {
     }
 
     public void waitGameStart(String uuid, QrJoinFragment fragment) {
-        db.collection("games").document(uuid).addSnapshotListener(new EventListener<DocumentSnapshot>() {
-            @Override
-            public void onEvent(@Nullable DocumentSnapshot snapshot,
-                                @Nullable FirebaseFirestoreException e) {
-                if (e != null) {
-                    Log.w("BARCODE", "Listen failed.", e);
-                    return;
-                }
+        db.collection("games").document(uuid).addSnapshotListener((snapshot, e) -> {
+            if (e != null) {
+                Log.w("BARCODE", "Listen failed.", e);
+                return;
+            }
 
-                if (snapshot != null && snapshot.exists() && State.valueOf((String) snapshot.get("state")) == State.STARTED) {
-                    Log.d("BARCODE", "Current data: " + snapshot.getData());
-                    fragment.startGame();
-                } else {
-                    Log.d("BARCODE", "Current data: null");
-                }
+            if (snapshot != null && snapshot.exists() && State.valueOf((String) snapshot.get("state")) == State.STARTED) {
+                Log.d("BARCODE", "Current data: " + snapshot.getData());
+                fragment.startGame();
+            } else {
+                Log.d("BARCODE", "Current data: null");
             }
         });
+    }
+
+    public Task<Void> startRoundGame(String gameId) {
+        return db.collection("games").document(gameId).update("state", State.STARTED);
     }
 }

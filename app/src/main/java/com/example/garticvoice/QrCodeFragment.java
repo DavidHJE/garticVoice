@@ -17,8 +17,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.example.garticvoice.dao.DAOGame;
 import com.example.garticvoice.databinding.FragmentFirstBinding;
 import com.example.garticvoice.databinding.FragmentQrCodeBinding;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
@@ -86,13 +91,19 @@ public class QrCodeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        view.findViewById(R.id.startRoundGame).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(getContext(), "ok", Toast.LENGTH_SHORT).show();
+        view.findViewById(R.id.startRoundGame).setOnClickListener(view1 -> {
+            DAOGame daoGame = new DAOGame();
+            Task<Void> taskStart = daoGame.startRoundGame(gameId);
+            taskStart.addOnSuccessListener(aVoid -> {
+                Log.d("BARCODE", "DocumentSnapshot successfully written!");
+                Toast.makeText(getContext(), "Commencer la game", Toast.LENGTH_SHORT).show();
+
                 NavHostFragment.findNavController(QrCodeFragment.this)
                         .navigate(R.id.action_qrCodeFragment_to_roundFragment);
-            }
+            })
+                    .addOnFailureListener(e -> Log.w("BARCODE", "Error writing document", e));
+
+
         });
         qrcodeImg = view.findViewById(R.id.QRCodeImg);
 
