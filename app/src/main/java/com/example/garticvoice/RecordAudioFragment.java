@@ -1,39 +1,48 @@
 package com.example.garticvoice;
 
+import static android.os.Environment.DIRECTORY_MUSIC;
+
+import android.media.MediaRecorder;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.fragment.NavHostFragment;
 
+import android.os.Environment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.garticvoice.dao.DAOPlayer;
-import com.example.garticvoice.databinding.FragmentRoundBinding;
+import com.example.garticvoice.databinding.FragmentRecordAudioBinding;
 import com.example.garticvoice.databinding.FragmentStartGameBinding;
 import com.example.garticvoice.model.Player;
 
+import java.io.IOException;
+import java.util.UUID;
+
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link RoundFragment#newInstance} factory method to
+ * Use the {@link RecordAudioFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class RoundFragment extends Fragment {
+public class RecordAudioFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    private FragmentRoundBinding binding;
+    private String fileName;
+    private MediaRecorder recorder;
+    private FragmentRecordAudioBinding binding;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
-    public RoundFragment() {
+    public RecordAudioFragment() {
         // Required empty public constructor
     }
 
@@ -43,11 +52,11 @@ public class RoundFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment RoundFragment.
+     * @return A new instance of fragment RecordAudioFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static RoundFragment newInstance(String param1, String param2) {
-        RoundFragment fragment = new RoundFragment();
+    public static RecordAudioFragment newInstance(String param1, String param2) {
+        RecordAudioFragment fragment = new RecordAudioFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -68,22 +77,54 @@ public class RoundFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        binding = FragmentRoundBinding.inflate(inflater, container, false);
+        binding = FragmentRecordAudioBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
-
-
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        binding.buttonTest.setOnClickListener(new View.OnClickListener() {
+        binding.BtnStartRecording.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                NavHostFragment.findNavController(RoundFragment.this)
-                        .navigate(R.id.action_roundFragment_to_recordAudioFragment);
+                startRecording();
             }
         });
+
+        binding.BtnStopRecording.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                stopRecording();
+            }
+        });
+    }
+
+    private void startRecording() {
+
+        String uuid = UUID.randomUUID().toString();
+        fileName = "/sdcard/Music/" + uuid + ".3gp";
+
+        recorder = new MediaRecorder();
+
+        recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+        recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+        recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+
+        recorder.setOutputFile(fileName);
+        try {
+            recorder.prepare();
+        } catch (IOException e) {
+            Log.e("TAG", "prepare() failed" + e);
+        }
+        recorder.start();
+        binding.RecorderTextView.setText("enregistrement commence");
+    }
+
+    private void stopRecording() {
+        recorder.stop();
+        recorder.release();
+        recorder = null;
+        binding.RecorderTextView.setText("enregistrement se termine");
     }
 }

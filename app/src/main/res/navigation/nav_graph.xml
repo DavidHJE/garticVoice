@@ -42,5 +42,14 @@
         android:id="@+id/roundFragment"
         android:name="com.example.garticvoice.RoundFragment"
         android:label="fragment_round"
-        tools:layout="@layout/fragment_round" />
+        tools:layout="@layout/fragment_round" >
+        <action
+            android:id="@+id/action_roundFragment_to_recordAudioFragment"
+            app:destination="@id/recordAudioFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/recordAudioFragment"
+        android:name="com.example.garticvoice.RecordAudioFragment"
+        android:label="fragment_record_audio"
+        tools:layout="@layout/fragment_record_audio" />
 </navigation>

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 
 import android.text.TextUtils;
 import android.util.Log;
@@ -89,6 +90,8 @@ public class QrCodeFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Toast.makeText(getContext(), "ok", Toast.LENGTH_SHORT).show();
+                NavHostFragment.findNavController(QrCodeFragment.this)
+                        .navigate(R.id.action_qrCodeFragment_to_roundFragment);
             }
         });
         qrcodeImg = view.findViewById(R.id.QRCodeImg);
