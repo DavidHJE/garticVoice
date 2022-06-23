@@ -10,6 +10,8 @@
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="join_game">Rejoindre le jeu</string>
+    <string name="join_game">Start the game</string>
     <string name="qrcode">QRCode</string>
+    <string name="message_wait_game">Veuillez attendre que la game commence</string>
+    <string name="round_message">Bienvenu dans le round</string>
 </resources>

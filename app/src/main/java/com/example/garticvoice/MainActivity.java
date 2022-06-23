@@ -32,40 +32,10 @@ public class MainActivity extends AppCompatActivity {
     private AppBarConfiguration appBarConfiguration;
     private ActivityMainBinding binding;
 
-    private final ActivityResultLauncher<ScanOptions> barcodeLauncher = registerForActivityResult(new ScanContract(),
-            result -> {
-                if(result.getContents() == null) {
-                    Intent originalIntent = result.getOriginalIntent();
-                    if (originalIntent == null) {
-                        Log.d("BARCODE", "Cancelled scan");
-                        Toast.makeText(MainActivity.this, "Cancelled", Toast.LENGTH_LONG).show();
-                    } else if(originalIntent.hasExtra(Intents.Scan.MISSING_CAMERA_PERMISSION)) {
-                        Log.d("BARCODE", "Cancelled scan due to missing camera permission");
-                        Toast.makeText(MainActivity.this, "Cancelled due to missing camera permission", Toast.LENGTH_LONG).show();
-                    }
-                } else {
-                    Log.d("BARCODE", "Scanned");
-                    Toast.makeText(MainActivity.this, "Scanned", Toast.LENGTH_LONG).show();
-                    String resultTxt = result.getContents();
-                }
-            });
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_window);
-
-        /*
-        scanBtn.setOnClickListener(view -> {
-            ScanOptions options = new ScanOptions();
-            options.setOrientationLocked(true);
-            options.setBeepEnabled(true);
-            options.setBarcodeImageEnabled(false);
-            options.setDesiredBarcodeFormats(ScanOptions.QR_CODE);
-            options.setPrompt("Scan QR Code");
-            barcodeLauncher.launch(options);
-        });
-         */
     }
 
     @Override

@@ -98,6 +98,12 @@ public class StartGameFragment extends Fragment {
                                             public void onSuccess(Void aVoid) {
                                                 Log.d("BARCODE", "DocumentSnapshot successfully written!");
                                                 Toast.makeText(getContext(), "Entrer dans la game", Toast.LENGTH_LONG).show();
+
+                                                Bundle bundle = new Bundle();
+                                                bundle.putString(QrJoinFragment.ARG_GAME_ID, game.getUuid());
+
+                                                NavHostFragment.findNavController(StartGameFragment.this)
+                                                        .navigate(R.id.action_startGameFragment_to_qrJoinFragment, bundle);
                                             }
                                         })
                                         .addOnFailureListener(new OnFailureListener() {
@@ -114,8 +120,7 @@ public class StartGameFragment extends Fragment {
                         }
                     });
 
-                    NavHostFragment.findNavController(StartGameFragment.this)
-                            .navigate(R.id.action_startGameFragment_to_qrJoinFragment);
+
                 }
             });
 

@@ -71,6 +71,7 @@ public class QrCodeFragment extends Fragment {
 
         binding = FragmentQrCodeBinding.inflate(inflater, container, false);
 
+
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_qr_code, container, false);
     }
@@ -84,6 +85,12 @@ public class QrCodeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        view.findViewById(R.id.startRoundGame).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getContext(), "ok", Toast.LENGTH_SHORT).show();
+            }
+        });
         qrcodeImg = view.findViewById(R.id.QRCodeImg);
 
         if(TextUtils.isEmpty(gameId)) {

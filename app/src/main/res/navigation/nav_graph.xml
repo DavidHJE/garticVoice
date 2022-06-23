@@ -25,10 +25,22 @@
         <argument
             android:name="gameId"
             app:argType="string" />
+        <action
+            android:id="@+id/action_qrCodeFragment_to_roundFragment"
+            app:destination="@id/roundFragment" />
     </fragment>
     <fragment
         android:id="@+id/qrJoinFragment"
         android:name="com.example.garticvoice.QrJoinFragment"
         android:label="fragment_qr_join"
-        tools:layout="@layout/fragment_qr_join" />
+        tools:layout="@layout/fragment_qr_join" >
+        <action
+            android:id="@+id/action_qrJoinFragment_to_roundFragment"
+            app:destination="@id/roundFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/roundFragment"
+        android:name="com.example.garticvoice.RoundFragment"
+        android:label="fragment_round"
+        tools:layout="@layout/fragment_round" />
 </navigation>
