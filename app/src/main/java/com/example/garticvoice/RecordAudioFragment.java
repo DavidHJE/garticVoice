@@ -1,6 +1,7 @@
 package com.example.garticvoice;
 
 import android.media.MediaRecorder;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,7 +13,12 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.garticvoice.databinding.FragmentRecordAudioBinding;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 
@@ -29,6 +35,9 @@ public class RecordAudioFragment extends Fragment {
     private static final String ARG_PARAM2 = "param2";
     private MediaRecorder recorder;
     private FragmentRecordAudioBinding binding;
+    private StorageReference storage;
+    private String fileName;
+    private String uuid;
 
     public RecordAudioFragment() {
         // Required empty public constructor
@@ -60,6 +69,8 @@ public class RecordAudioFragment extends Fragment {
             String mParam1 = getArguments().getString(ARG_PARAM1);
             String mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        storage = FirebaseStorage.getInstance().getReference();
     }
 
     @Override
@@ -91,8 +102,8 @@ public class RecordAudioFragment extends Fragment {
 
     private void startRecording() {
 
-        String uuid = UUID.randomUUID().toString();
-        String fileName = "/sdcard/Music/" + uuid + ".3gp";
+        uuid = UUID.randomUUID().toString();
+        fileName = "/sdcard/Music/" + uuid + ".3gp";
 
         recorder = new MediaRecorder();
 
@@ -107,13 +118,28 @@ public class RecordAudioFragment extends Fragment {
             Log.e("TAG", "prepare() failed" + e);
         }
         recorder.start();
-        binding.RecorderTextView.setText("enregistrement commence");
+        binding.RecorderTextView.setText("enregistrement en cours");
     }
 
     private void stopRecording() {
         recorder.stop();
         recorder.release();
         recorder = null;
-        binding.RecorderTextView.setText("enregistrement se termine");
+        binding.RecorderTextView.setText("enregistrement terminé");
+
+        uploadAudioToFirebase();
+    }
+
+    private void uploadAudioToFirebase() {
+        binding.RecorderTextView.setText("Envoi de l'audio en cours");
+        StorageReference filepath = storage.child(uuid + ".3gp");
+        Uri uri = Uri.fromFile(new File(fileName));
+        filepath.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>(){
+
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                binding.RecorderTextView.setText("Envoi terminé");
+            }
+        });
     }
 }
